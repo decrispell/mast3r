@@ -111,8 +111,6 @@ def get_reconstructed_scene(glomap_bin, outdir, model, retrieval_model, device, 
         filelist = [filelist[0], filelist[0]]
 
     scene_graph_params = [scenegraph_type]
-    import pdb
-    pdb.set_trace()
     if scenegraph_type in ["swin", "logwin"]:
         scene_graph_params.append(str(winsize))
     elif scenegraph_type == "oneref":
