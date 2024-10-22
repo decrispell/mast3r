@@ -4,6 +4,8 @@ set -eux
 
 # Default model name
 model_name="MASt3R_ViTLarge_BaseDecoder_512_catmlpdpt_metric.pth"
+retrieval_model_name="MASt3R_ViTLarge_BaseDecoder_512_catmlpdpt_metric_retrieval_trainingfree.pth"
+retrieval_codebook_name="MASt3R_ViTLarge_BaseDecoder_512_catmlpdpt_metric_retrieval_codebook.pkl"
 
 check_docker() {
     if ! command -v docker &>/dev/null; then
@@ -15,10 +17,18 @@ check_docker() {
 download_model_checkpoint() { 
     if [ -f "./files/checkpoints/${model_name}" ]; then
         echo "Model checkpoint ${model_name} already exists. Skipping download."
-        return
+    else
+        echo "Downloading model checkpoint ${model_name}..."
+        wget "https://download.europe.naverlabs.com/ComputerVision/MASt3R/${model_name}" -P ./files/checkpoints
     fi
-    echo "Downloading model checkpoint ${model_name}..."
-    wget "https://download.europe.naverlabs.com/ComputerVision/MASt3R/${model_name}" -P ./files/checkpoints
+    if [ -f "./files/checkpoints/${retrieval_model_name}" ]; then
+        echo "Retrieval checkpoint ${retrieval_model_name} already exists. Skipping download."
+    else
+        echo "Downloading retrieval checkpoint and codebook"
+        wget "https://download.europe.naverlabs.com/ComputerVision/MASt3R/MASt3R_ViTLarge_BaseDecoder_512_catmlpdpt_metric_retrieval_trainingfree.pth" -P ./files/checkpoints
+
+        wget "https://download.europe.naverlabs.com/ComputerVision/MASt3R/MASt3R_ViTLarge_BaseDecoder_512_catmlpdpt_metric_retrieval_codebook.pkl" -P ./files/checkpoints
+    fi
 }
 
 set_dcomp() {
